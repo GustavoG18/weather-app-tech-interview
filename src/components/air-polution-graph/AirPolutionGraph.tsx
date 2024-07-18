@@ -5,6 +5,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useWeather, WeatherService } from "@/hooks/use-weather";
 
 const chartData = [
   { month: "January", desktop: 186, mobile: 80 },
@@ -26,7 +27,17 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+const FAKE_LAT = "10.992960";
+const FAKE_LONG = "-74.779907";
+
 export const AirPolutionGraph = () => {
+  const {data, loading, error} = useWeather(WeatherService.AirPollution, {
+    lat: FAKE_LAT,
+    long: FAKE_LONG,
+    startDate: '1606488670',
+    endDate: '1606747870'
+  });
+  console.log({data})
   return (
     <ChartContainer config={chartConfig}>
       <LineChart
