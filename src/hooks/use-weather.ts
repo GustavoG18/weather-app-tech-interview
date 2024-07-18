@@ -1,14 +1,18 @@
 import { useState, useEffect } from "react";
-import { ChartData, parseAirPolutionResponse } from "@/dtos/air-polution.dto";
+import { parseAirPolutionResponse } from "@/dtos/air-polution.dto";
+import { parsePrecipitationTemperatureResponse } from "@/dtos/precipitation-temperature.dto";
+import { ChartData } from "@/interfaces/chart.interface";
+import { AirQualityResponse } from "@/interfaces/air-polution.interface";
+import { FiveDayForecastResponse } from "@/interfaces/precipitation-temperature.interface";
+
+const BASE_URL = `https://api.openweathermap.org/data/2.5`;
+const appId = import.meta.env.VITE_WEATHER_APPID;
 
 export enum WeatherService {
   FiveDayForecast = "forecast",
   AirPollution = "air_pollution/history",
   CurrentWeather = "weather",
 }
-
-const BASE_URL = `https://api.openweathermap.org/data/2.5`;
-const appId = import.meta.env.VITE_WEATHER_APPID;
 
 type Params = Partial<{
   startDate: string;
@@ -27,11 +31,10 @@ export const useWeather = (serviceName: WeatherService, params?: Params) => {
       setLoading(true);
       try {
         const endpoint = getEndpoint();
-
         const response = await fetch(endpoint);
         if (response.ok) {
           const weatherData = await response.json();
-          setData(parseAirPolutionResponse(weatherData));
+          handleWeatherServiceResponse(serviceName, weatherData);
         }
       } catch (err) {
         setError("Error fetching the graph data");
@@ -42,9 +45,24 @@ export const useWeather = (serviceName: WeatherService, params?: Params) => {
     getData();
   }, []);
 
+  const handleWeatherServiceResponse = (serviceName: WeatherService, weatherData: AirQualityResponse | FiveDayForecastResponse) => {
+    switch(serviceName) {
+      case WeatherService.AirPollution:
+        setData(parseAirPolutionResponse(weatherData as AirQualityResponse));
+        break;
+      case WeatherService.FiveDayForecast:
+        setData(parsePrecipitationTemperatureResponse(weatherData as FiveDayForecastResponse));
+        break;
+      case WeatherService.CurrentWeather:
+        console.log("Soon");
+        break;
+    }
+  };
+
+
   const getEndpoint = () => {
-    const baseEndpoint = `${BASE_URL}/${serviceName}?lat=${params?.lat}&lon=${params?.long}&appid=${appId}`;
-    let additionalParams;
+    const baseEndpoint = `${BASE_URL}/${serviceName}?lat=${params?.lat}&lon=${params?.long}&appid=${appId}&units=metric`;
+    let additionalParams = '';
     switch (serviceName) {
       case WeatherService.AirPollution:
         additionalParams = `&start=${params?.startDate}&end=${params?.endDate}`;
