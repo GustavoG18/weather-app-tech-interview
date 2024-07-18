@@ -12,18 +12,13 @@ import {
 } from "@/components/ui/chart";
 import moment from "moment";
 
-const FAKE_LAT = "10.992960";
-const FAKE_LONG = "-74.779907";
-
 export const AirPolutionGraph = () => {
   const [chartConfig, setChartConfig] = useState<ChartConfig>({});
-  const { data, loading, error } = useWeather(WeatherService.AirPollution, {
-    lat: FAKE_LAT,
-    long: FAKE_LONG,
+  const { data, loading, error, errorLocation } = useWeather(WeatherService.AirPollution, {
     startDate: moment().subtract(3, 'months').unix().toString(),
     endDate: moment().unix().toString(),
   });
-
+  
   useEffect(() => {
     if (data) {
       const keys = Object.keys(data[0]).filter(key => key !== 'date');

@@ -6,6 +6,7 @@ import { AirQualityResponse } from "@/interfaces/air-polution.interface";
 import { FiveDayForecastResponse } from "@/interfaces/precipitation-temperature.interface";
 import { parseCurrentWeatherResponse } from "@/dtos/current-weather.dto";
 import { CurrentWeatherResponse, DataTable } from "@/interfaces/current-weather.interface";
+import { useLocation } from "./use-location";
 
 const BASE_URL = `https://api.openweathermap.org/data/2.5`;
 const appId = import.meta.env.VITE_WEATHER_APPID;
@@ -19,14 +20,13 @@ export enum WeatherService {
 type Params = Partial<{
   startDate: string;
   endDate: string;
-  lat: string;
-  long: string;
 }>;
 
 export const useWeather = (serviceName: WeatherService, params?: Params) => {
   const [data, setData] = useState<ChartData[] | DataTable[]>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { location, error: errorLocation } = useLocation();
 
   useEffect(() => {
     const getData = async () => {
@@ -44,8 +44,10 @@ export const useWeather = (serviceName: WeatherService, params?: Params) => {
         setLoading(false);
       }
     };
-    getData();
-  }, []);
+    if(location.lat && location.long){
+      getData();
+    }
+  }, [location]);
 
   const handleWeatherServiceResponse = (serviceName: WeatherService, weatherData: AirQualityResponse | FiveDayForecastResponse | CurrentWeatherResponse) => {
     switch (serviceName) {
@@ -61,9 +63,8 @@ export const useWeather = (serviceName: WeatherService, params?: Params) => {
     }
   };
 
-
   const getEndpoint = () => {
-    const baseEndpoint = `${BASE_URL}/${serviceName}?lat=${params?.lat}&lon=${params?.long}&appid=${appId}&units=metric`;
+    const baseEndpoint = `${BASE_URL}/${serviceName}?lat=${location?.lat}&lon=${location?.long}&appid=${appId}&units=metric`;
     let additionalParams = '';
     switch (serviceName) {
       case WeatherService.AirPollution:
@@ -73,5 +74,5 @@ export const useWeather = (serviceName: WeatherService, params?: Params) => {
     return `${baseEndpoint}${additionalParams}`;
   };
 
-  return { data, loading, error };
+  return { data, loading, error, errorLocation };
 };

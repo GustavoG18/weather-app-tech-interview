@@ -9,14 +9,8 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-const FAKE_LAT = "10.992960";
-const FAKE_LONG = "-74.779907";
-
 export const PrecipitationTemperatureGraph = () => {
-  const { data, loading, error } = useWeather(WeatherService.FiveDayForecast, {
-    lat: FAKE_LAT,
-    long: FAKE_LONG,
-  });
+  const { data, loading, error, errorLocation } = useWeather(WeatherService.FiveDayForecast);
 
   const chartConfig = {
     precipitation: {
