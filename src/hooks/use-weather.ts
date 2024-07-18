@@ -4,6 +4,8 @@ import { parsePrecipitationTemperatureResponse } from "@/dtos/precipitation-temp
 import { ChartData } from "@/interfaces/chart.interface";
 import { AirQualityResponse } from "@/interfaces/air-polution.interface";
 import { FiveDayForecastResponse } from "@/interfaces/precipitation-temperature.interface";
+import { parseCurrentWeatherResponse } from "@/dtos/current-weather.dto";
+import { CurrentWeatherResponse, DataTable } from "@/interfaces/current-weather.interface";
 
 const BASE_URL = `https://api.openweathermap.org/data/2.5`;
 const appId = import.meta.env.VITE_WEATHER_APPID;
@@ -22,7 +24,7 @@ type Params = Partial<{
 }>;
 
 export const useWeather = (serviceName: WeatherService, params?: Params) => {
-  const [data, setData] = useState<ChartData[]>();
+  const [data, setData] = useState<ChartData[] | DataTable[]>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -45,8 +47,8 @@ export const useWeather = (serviceName: WeatherService, params?: Params) => {
     getData();
   }, []);
 
-  const handleWeatherServiceResponse = (serviceName: WeatherService, weatherData: AirQualityResponse | FiveDayForecastResponse) => {
-    switch(serviceName) {
+  const handleWeatherServiceResponse = (serviceName: WeatherService, weatherData: AirQualityResponse | FiveDayForecastResponse | CurrentWeatherResponse) => {
+    switch (serviceName) {
       case WeatherService.AirPollution:
         setData(parseAirPolutionResponse(weatherData as AirQualityResponse));
         break;
@@ -54,7 +56,7 @@ export const useWeather = (serviceName: WeatherService, params?: Params) => {
         setData(parsePrecipitationTemperatureResponse(weatherData as FiveDayForecastResponse));
         break;
       case WeatherService.CurrentWeather:
-        console.log("Soon");
+        setData(parseCurrentWeatherResponse(weatherData as CurrentWeatherResponse));
         break;
     }
   };
