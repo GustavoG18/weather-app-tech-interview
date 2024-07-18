@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ChartData, parseAirPolutionResponse } from "@/dtos/air-polution.dto";
 
 export enum WeatherService {
   FiveDayForecast = "forecast",
@@ -17,7 +18,7 @@ type Params = Partial<{
 }>;
 
 export const useWeather = (serviceName: WeatherService, params?: Params) => {
-  const [data, setData] = useState();
+  const [data, setData] = useState<ChartData[]>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -30,7 +31,7 @@ export const useWeather = (serviceName: WeatherService, params?: Params) => {
         const response = await fetch(endpoint);
         if (response.ok) {
           const weatherData = await response.json();
-          setData(weatherData);
+          setData(parseAirPolutionResponse(weatherData));
         }
       } catch (err) {
         setError("Error fetching the graph data");

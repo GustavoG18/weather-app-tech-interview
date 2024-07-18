@@ -1,48 +1,51 @@
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
+import { useEffect, useState } from "react";
+import { useWeather, WeatherService } from "@/hooks/use-weather";
+import { getRandomColor } from "@/lib/utilities/random-color";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import {
   ChartConfig,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { useWeather, WeatherService } from "@/hooks/use-weather";
-
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-];
-
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "#2563eb",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "#60a5fa",
-  },
-} satisfies ChartConfig;
+import moment from "moment";
 
 const FAKE_LAT = "10.992960";
 const FAKE_LONG = "-74.779907";
 
 export const AirPolutionGraph = () => {
-  const {data, loading, error} = useWeather(WeatherService.AirPollution, {
+  const [chartConfig, setChartConfig] = useState<ChartConfig>({});
+  const { data, loading, error } = useWeather(WeatherService.AirPollution, {
     lat: FAKE_LAT,
     long: FAKE_LONG,
-    startDate: '1606488670',
-    endDate: '1606747870'
+    startDate: moment().subtract(3, 'months').unix().toString(),
+    endDate: moment().unix().toString(),
   });
-  console.log({data})
+
+  useEffect(() => {
+    if (data) {
+      const keys = Object.keys(data[0]).filter(key => key !== 'date');
+      const config: ChartConfig = {};
+      keys.forEach(key => {
+        config[key] = {
+          label: key,
+          color: getRandomColor(),
+        };
+      });
+      setChartConfig(config);
+    }
+  }, [data]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error fetching data</div>;
+
   return (
     <ChartContainer config={chartConfig}>
       <LineChart
         accessibilityLayer
-        data={chartData}
+        data={data}
         margin={{
           left: 12,
           right: 12,
@@ -50,27 +53,27 @@ export const AirPolutionGraph = () => {
       >
         <CartesianGrid vertical={false} />
         <XAxis
-          dataKey="month"
+          dataKey="date"
           tickLine={false}
           axisLine={false}
-          tickMargin={8}
-          tickFormatter={(value) => value.slice(0, 3)}
+          tickMargin={10}
+          tickFormatter={(value) => value.split('-')[1]}
+          angle={-90}
         />
+        <YAxis />
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-        <Line
-          dataKey="desktop"
-          type="monotone"
-          stroke="var(--color-desktop)"
-          strokeWidth={2}
-          dot={false}
-        />
-        <Line
-          dataKey="mobile"
-          type="monotone"
-          stroke="var(--color-mobile)"
-          strokeWidth={2}
-          dot={false}
-        />
+        <ChartLegend content={<ChartLegendContent />} />
+        {data &&
+          Object.keys(chartConfig).map(dataKey => (
+            <Line
+              key={dataKey}
+              dataKey={dataKey}
+              type="monotone"
+              stroke={chartConfig[dataKey].color}
+              strokeWidth={2}
+              dot={false}
+            />
+          ))}
       </LineChart>
     </ChartContainer>
   );
