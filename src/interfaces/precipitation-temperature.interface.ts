@@ -6,7 +6,7 @@ export interface FiveDayForecastResponse {
     city: City;
 }
 
-interface WeatherEntry {
+export interface WeatherEntry {
     dt: number;
     main: Main;
     weather: Weather[];
