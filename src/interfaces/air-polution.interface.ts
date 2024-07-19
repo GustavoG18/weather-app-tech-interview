@@ -18,7 +18,7 @@ export interface Components {
     nh3: number;
 }
 
-interface AirQuality {
+export interface AirQuality {
     main: Main;
     components: Components;
     dt: number;
