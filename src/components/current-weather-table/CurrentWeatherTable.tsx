@@ -24,7 +24,7 @@ export const CurrentWeatherTable = () => {
                 </tbody>
             </table>
             <div className="grow flex flex-col text-slate-100 justify-center items-center">
-                <h2 className="text-5xl p-4 text-center font-bold from-purple-600 via-pink-600 to-blue-600 bg-gradient-to-r bg-clip-text text-transparent">{data?.title}</h2>
+                <h2 className="text-4xl lg:text-5xl p-4 text-center font-bold from-purple-600 via-pink-600 to-blue-600 bg-gradient-to-r bg-clip-text text-transparent">{data?.title}</h2>
                 <img className="w-32" src={data?.icon} />
                 <span className="text-2xl text-slate-100 capitalize">{data?.description}</span>
             </div>

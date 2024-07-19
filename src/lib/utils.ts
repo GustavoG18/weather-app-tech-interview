@@ -18,6 +18,8 @@ const units: Record<string, string> = {
   temperature: "Cº",
   precipitation: "%",
   air: "µg/m³",
+  humidity: "%",
+  pressure: "Pa",
 }
 
 export const formatDataTooltip = (value: number, key: string) => {

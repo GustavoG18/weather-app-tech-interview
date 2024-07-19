@@ -1,4 +1,5 @@
 import { CurrentWeatherResponse, TableInformation } from "@/interfaces/current-weather.interface";
+import { formatDataTooltip } from "@/lib/utils";
 
 /**
  * The main purpose of this function is to model the data returned by the "openweathermap" API 
@@ -21,7 +22,7 @@ export const parseCurrentWeatherResponse = ({ main, name, sys, weather }: Curren
         if (key in main) {
             return {
                 key: translations[key] || key,
-                value: main[key as keyof typeof main],
+                value: `${formatDataTooltip(main[key as keyof typeof main], key !== 'humidity' && key !== 'pressure' ? 'temperature':key)}`,
             };
         }
         return {
