@@ -15,7 +15,7 @@ import moment from "moment";
 export const parseAirPolutionResponse = ({ list }: AirQualityResponse): ChartData[] => {
     return Object.entries(groupedByDate(list)).map(([date, componentsArray]) => {
         const numEntries = componentsArray.length;
-        
+
         const avgComponents = componentsArray.reduce((acc: Partial<Components>, components: Components) => {
             (Object.keys(components) as (keyof Components)[]).forEach(key => {
                 if (!acc[key]) {

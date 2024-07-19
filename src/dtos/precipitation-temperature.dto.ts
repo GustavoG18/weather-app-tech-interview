@@ -50,7 +50,7 @@ export const parsePrecipitationTemperatureResponse = ({ list }: FiveDayForecastR
  */
 const groupedByDate = (list: WeatherEntry[]): Record<string, PrecipitationEntry[]> => {
     return list.reduce((acc: Record<string, PrecipitationEntry[]>, { dt, pop, main }) => {
-        const date = moment.unix(dt).format('DD');
+        const date = moment.unix(dt).format('DD-MM-YYYY');
         if (!acc[date]) {
             acc[date] = [];
         }
