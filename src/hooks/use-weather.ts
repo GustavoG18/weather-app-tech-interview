@@ -55,6 +55,12 @@ export const useWeather = (serviceName: WeatherService, params?: Params) => {
     setError(errorLocation);
   }, [errorLocation])
 
+  /**
+  * This function models the data in a way that Recharts understands, 
+  * or allows us to easily create a two-column table.
+  * @param {AirQualityResponse | FiveDayForecastResponse | CurrentWeatherResponse} weatherData - Data provided by the "openweathermap" API.
+  * @returns {DataTable[] | ChartData[]} - Returns the data already modeled to create a chart or table, depending on the chosen service.
+  */
   const handleWeatherServiceResponse = (weatherData: AirQualityResponse | FiveDayForecastResponse | CurrentWeatherResponse) => {
     switch (serviceName) {
       case WeatherService.AirPollution:
@@ -66,6 +72,10 @@ export const useWeather = (serviceName: WeatherService, params?: Params) => {
     }
   };
 
+  /**
+  * This function creates the endpoint with the necessary parameters for each service name.
+  * @returns {string} - Returns a string with the necessary endpoint URL based on the used service name.
+  */
   const getEndpoint = () => {
     const baseEndpoint = `${BASE_URL}/${serviceName}?lat=${location?.lat}&lon=${location?.long}&appid=${appId}&units=metric`;
     let additionalParams = '';

@@ -1,5 +1,11 @@
 import { CurrentWeatherResponse, DataTable } from "@/interfaces/current-weather.interface";
 
+/**
+ * The main purpose of this function is to model the data returned by the "openweathermap" API 
+ * from the current weather endpoint in such a way that it allows us to easily create a table.
+ * @param {CurrentWeatherResponse} currentWeatherResponse - Data provided by the API.
+ * @returns {DataTable[]} - Data that is easy to shape into a table.
+ */
 export const parseCurrentWeatherResponse = ({ main }: CurrentWeatherResponse): DataTable[] => {
     const translations: Record<string, string> = {
         temp: 'Temperature',
