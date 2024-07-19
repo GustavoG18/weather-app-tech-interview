@@ -9,10 +9,10 @@ export const Dashboard = () => {
             <div className="col-span-4">
                 <CurrentWeatherTable />
             </div>
-            <div className="col-span-2">
+            <div className="col-span-4 lg:col-span-2">
                 <PrecipitationTemperatureGraph />
             </div>
-            <div className="col-span-2">
+            <div className="col-span-4 lg:col-span-2">
                 <AirPolutionGraph />
             </div>
         </div>
