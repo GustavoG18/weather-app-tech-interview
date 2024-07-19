@@ -55,7 +55,7 @@ const groupedByDate = (list: WeatherEntry[]): Record<string, PrecipitationEntry[
             acc[date] = [];
         }
         acc[date].push({
-            precipitation: pop,
+            precipitation: pop * 100,
             temperature: main.temp,
         })
         return acc;

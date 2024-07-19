@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useWeather, WeatherService } from "@/hooks/use-weather";
-import { getRandomColor } from "@/lib/utils";
+import { formatDataTooltip, getRandomColor } from "@/lib/utils";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import {
   ChartConfig,
@@ -36,7 +36,7 @@ export const AirPolutionGraph = () => {
     }
   }, [data]);
 
-  if (loading) return <Loading  />;
+  if (loading) return <Loading />;
   if (error) return <DangerAlert error={error} />;
 
   return (
@@ -60,7 +60,13 @@ export const AirPolutionGraph = () => {
             stroke="#ffffff"
           />
           <YAxis stroke="#ffffff" />
-          <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+          <ChartTooltip cursor={false} content={<ChartTooltipContent formatter={(value, name, item) => {
+            return <div className="flex items-center">
+              <span className="inline-block w-3 h-3 mr-2 rounded-full" style={{ background: item.stroke}}></span>
+              <span className="text-sm text-gray-600">{name}: <span className="font-medium text-gray-800">{formatDataTooltip(Number(value), 'air')}</span></span>
+            </div>
+            }} 
+          />} />
           <ChartLegend content={<ChartLegendContent />} wrapperStyle={{ color: '#ffffff', textTransform: 'capitalize' }} />
           {data &&
             Object.keys(chartConfig).map(dataKey => (

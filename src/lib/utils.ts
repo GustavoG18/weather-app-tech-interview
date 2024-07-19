@@ -13,3 +13,13 @@ export const getRandomColor = () => {
   }
   return color;
 }
+
+const units: Record<string, string> = {
+  temperature: "Cº",
+  precipitation: "%",
+  air: "µg/m³",
+}
+
+export const formatDataTooltip = (value: number, key: string) => {
+  return `${value.toFixed(1)} ${units[key]}`;
+}

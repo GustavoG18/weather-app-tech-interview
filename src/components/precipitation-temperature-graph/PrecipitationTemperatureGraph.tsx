@@ -11,6 +11,7 @@ import {
 import { ChartData } from "@/interfaces/chart.interface";
 import { Loading } from "@/components/loading/Loading";
 import { DangerAlert } from "@/components/alert/DangerAlert";
+import { formatDataTooltip } from "@/lib/utils";
 
 export const PrecipitationTemperatureGraph = () => {
   const { data, loading, error } = useWeather<ChartData[]>(WeatherService.FiveDayForecast);
@@ -50,7 +51,13 @@ export const PrecipitationTemperatureGraph = () => {
             stroke="#ffffff"
           />
           <YAxis stroke="#ffffff"/>
-          <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+          <ChartTooltip cursor={false} content={<ChartTooltipContent formatter={(value, name, item) => {
+            return <div className="flex items-center">
+              <span className="inline-block w-3 h-3 mr-2 rounded-full" style={{ background: item.stroke}}></span>
+              <span className="text-sm text-gray-600">{name}: <span className="font-medium text-gray-800">{formatDataTooltip(Number(value), name.toString())}</span></span>
+            </div>
+            }} 
+          />} />
           <ChartLegend content={<ChartLegendContent />} wrapperStyle={{ color: '#ffffff', textTransform: 'capitalize' }}/>
           <Area
             dataKey="temperature"
