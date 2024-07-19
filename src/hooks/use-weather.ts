@@ -31,12 +31,14 @@ export const useWeather = (serviceName: WeatherService, params?: Params) => {
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
+      setError("");
       try {
         const endpoint = getEndpoint();
         const response = await fetch(endpoint);
         if (response.ok) {
           const weatherData = await response.json();
-          handleWeatherServiceResponse(serviceName, weatherData);
+          const parsedData = handleWeatherServiceResponse(weatherData);
+          setData(parsedData);
         }
       } catch (err) {
         setError("Error fetching the graph data");
@@ -49,17 +51,18 @@ export const useWeather = (serviceName: WeatherService, params?: Params) => {
     }
   }, [location]);
 
-  const handleWeatherServiceResponse = (serviceName: WeatherService, weatherData: AirQualityResponse | FiveDayForecastResponse | CurrentWeatherResponse) => {
+  useEffect(() => {
+    setError(errorLocation);
+  }, [errorLocation])
+
+  const handleWeatherServiceResponse = (weatherData: AirQualityResponse | FiveDayForecastResponse | CurrentWeatherResponse) => {
     switch (serviceName) {
       case WeatherService.AirPollution:
-        setData(parseAirPolutionResponse(weatherData as AirQualityResponse));
-        break;
+        return parseAirPolutionResponse(weatherData as AirQualityResponse);
       case WeatherService.FiveDayForecast:
-        setData(parsePrecipitationTemperatureResponse(weatherData as FiveDayForecastResponse));
-        break;
+        return parsePrecipitationTemperatureResponse(weatherData as FiveDayForecastResponse);
       case WeatherService.CurrentWeather:
-        setData(parseCurrentWeatherResponse(weatherData as CurrentWeatherResponse));
-        break;
+        return parseCurrentWeatherResponse(weatherData as CurrentWeatherResponse);
     }
   };
 
@@ -74,5 +77,5 @@ export const useWeather = (serviceName: WeatherService, params?: Params) => {
     return `${baseEndpoint}${additionalParams}`;
   };
 
-  return { data, loading, error, errorLocation };
+  return { data, loading, error };
 };

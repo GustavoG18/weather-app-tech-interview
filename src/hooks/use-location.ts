@@ -16,13 +16,13 @@ interface GeolocationData {
 }
 
 interface LocationState {
-    lat: string | undefined,
-    long: string | undefined,
+    lat?: string;
+    long?: string;
 }
 
 export const useLocation = () => {
-    const [location, setLocation] = useState<LocationState>({ lat: undefined, long: undefined });
-    const [error, setError] = useState<string | null>(null);
+    const [location, setLocation] = useState<LocationState>({});
+    const [error, setError] = useState("");
 
     useEffect(() => {
         if (!navigator.geolocation) {
