@@ -11,7 +11,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
     <>
       <div className="min-h-full">
-        <Disclosure as="nav" className="border-b border-gray-200 bg-white dark:bg-slate-800">
+        <Disclosure as="nav" className="border-b border-b-slate-800 bg-slate-950">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 justify-between">
               <div className="flex">
@@ -23,7 +23,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                       aria-current={item.current ? "page" : undefined}
                       className={cn(
                         item.current
-                          ? "border-indigo-500 text-gray-900"
+                          ? "border-indigo-500 text-white"
                           : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
                         "inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium"
                       )}
@@ -36,14 +36,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             </div>
           </div>
         </Disclosure>
-        <div className="py-10 dark:bg-slate-800">
-          <header>
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
-                Barranquilla, Colombia
-              </h1>
-            </div>
-          </header>
+        <div className="py-6 bg-slate-950">
           <main>
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
               {children}
