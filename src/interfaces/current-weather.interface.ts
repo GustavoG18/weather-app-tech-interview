@@ -58,3 +58,10 @@ export interface DataTable {
     key: string;
     value: string | number;
 }
+
+export interface TableInformation {
+    dataTable: DataTable[];
+    title: string;
+    description: string;
+    icon: string;
+}

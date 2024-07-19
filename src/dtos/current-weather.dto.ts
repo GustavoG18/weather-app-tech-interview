@@ -1,12 +1,13 @@
-import { CurrentWeatherResponse, DataTable } from "@/interfaces/current-weather.interface";
+import { CurrentWeatherResponse, TableInformation } from "@/interfaces/current-weather.interface";
 
 /**
  * The main purpose of this function is to model the data returned by the "openweathermap" API 
  * from the current weather endpoint in such a way that it allows us to easily create a table.
  * @param {CurrentWeatherResponse} currentWeatherResponse - Data provided by the API.
- * @returns {DataTable[]} - Data that is easy to shape into a table.
+ * @returns {TableInformation} - Data that is easy to shape into a table.
  */
-export const parseCurrentWeatherResponse = ({ main }: CurrentWeatherResponse): DataTable[] => {
+export const parseCurrentWeatherResponse = ({ main, name, sys, weather }: CurrentWeatherResponse): TableInformation => {
+    const tableInformation: Partial<TableInformation> = {};
     const translations: Record<string, string> = {
         temp: 'Temperature',
         temp_max: 'Maximum Temperature',
@@ -16,7 +17,7 @@ export const parseCurrentWeatherResponse = ({ main }: CurrentWeatherResponse): D
         pressure: 'Pressure',
     };
 
-    return Object.keys(main).map((key) => {
+    tableInformation["dataTable"] = Object.keys(main).map((key) => {
         if (key in main) {
             return {
                 key: translations[key] || key,
@@ -28,4 +29,10 @@ export const parseCurrentWeatherResponse = ({ main }: CurrentWeatherResponse): D
             value: '',
         };
     }).filter(({ key }) => key !== 'sea_level' && key !== 'grnd_level');
+
+    tableInformation['title'] = `${name},${sys.country}`;
+    tableInformation['description'] = weather[0].description;
+    tableInformation['icon'] = `https://openweathermap.org/img/wn/${weather[0].icon}@4x.png`;
+
+    return tableInformation as TableInformation;
 }
