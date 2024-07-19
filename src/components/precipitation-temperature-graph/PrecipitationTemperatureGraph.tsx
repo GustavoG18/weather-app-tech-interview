@@ -31,7 +31,7 @@ export const PrecipitationTemperatureGraph = () => {
 
   return (
     <div className="border border-slate-800 p-4 rounded-lg">
-      <h2 className="text-white text-1xl w-full text-center font-bold">
+      <h2 className="text-white text-1xl w-full text-center font-bold capitalize">
         Next 5 days temperature vs precipitation
       </h2>
       <ChartContainer config={chartConfig}>
