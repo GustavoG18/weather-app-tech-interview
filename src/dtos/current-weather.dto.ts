@@ -1,7 +1,7 @@
 import { CurrentWeatherResponse, DataTable } from "@/interfaces/current-weather.interface";
 
 export const parseCurrentWeatherResponse = ({ main }: CurrentWeatherResponse): DataTable[] => {
-    const translations: { [key: string]: string } = {
+    const translations: Record<string, string> = {
         temp: 'Temperature',
         temp_max: 'Maximum Temperature',
         temp_min: 'Minimum Temperature',

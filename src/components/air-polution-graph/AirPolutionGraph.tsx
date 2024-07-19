@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useWeather, WeatherService } from "@/hooks/use-weather";
-import { getRandomColor } from "@/lib/utilities/random-color";
+import { getRandomColor } from "@/lib/utils";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import {
   ChartConfig,
@@ -14,7 +14,7 @@ import moment from "moment";
 
 export const AirPolutionGraph = () => {
   const [chartConfig, setChartConfig] = useState<ChartConfig>({});
-  const { data, loading, error, errorLocation } = useWeather(WeatherService.AirPollution, {
+  const { data, loading, error } = useWeather(WeatherService.AirPollution, {
     startDate: moment().subtract(3, 'months').unix().toString(),
     endDate: moment().unix().toString(),
   });
@@ -34,23 +34,19 @@ export const AirPolutionGraph = () => {
   }, [data]);
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error fetching data</div>;
+  if (error) return <div>{ error }</div>;
 
   return (
     <ChartContainer config={chartConfig}>
       <LineChart
         accessibilityLayer
         data={data}
-        margin={{
-          left: 12,
-          right: 12,
-        }}
       >
         <CartesianGrid vertical={false} />
         <XAxis
           dataKey="date"
-          tickLine={false}
-          axisLine={false}
+          tickLine={true}
+          axisLine={true}
           tickMargin={10}
           tickFormatter={(value) => value.split('-')[1]}
           angle={-90}

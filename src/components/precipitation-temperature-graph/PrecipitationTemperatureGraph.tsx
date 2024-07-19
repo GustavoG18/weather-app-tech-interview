@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/chart";
 
 export const PrecipitationTemperatureGraph = () => {
-  const { data, loading, error, errorLocation } = useWeather(WeatherService.FiveDayForecast);
+  const { data, loading, error } = useWeather(WeatherService.FiveDayForecast);
 
   const chartConfig = {
     precipitation: {
@@ -24,17 +24,14 @@ export const PrecipitationTemperatureGraph = () => {
   } satisfies ChartConfig;
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error fetching data</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <ChartContainer config={chartConfig}>
       <ComposedChart
         accessibilityLayer
         data={data}
-        margin={{
-          left: 12,
-          right: 12,
-        }}
+        
       >
         <CartesianGrid vertical={false} />
         <XAxis
@@ -42,12 +39,19 @@ export const PrecipitationTemperatureGraph = () => {
           tickLine={false}
           axisLine={false}
           tickMargin={10}
-          tickFormatter={(value) => value.split('-')[1]}
+          tickFormatter={(value) => value}
           angle={-90}
         />
         <YAxis />
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
         <ChartLegend content={<ChartLegendContent />} />
+        <Area
+          dataKey="temperature"
+          type="monotone"
+          stroke={chartConfig["temperature"].color}
+          fill={chartConfig["temperature"].color}
+          strokeWidth={2}
+          dot={false} />
         <Line
           dataKey="precipitation"
           type="monotone"
@@ -55,13 +59,6 @@ export const PrecipitationTemperatureGraph = () => {
           strokeWidth={2}
           dot={false}
         />
-        <Area  
-          dataKey="temperature"
-          type="monotone"
-          stroke={chartConfig["temperature"].color}
-          fill={chartConfig["temperature"].color}
-          strokeWidth={2}
-          dot={false} />
       </ComposedChart>
     </ChartContainer>
   )

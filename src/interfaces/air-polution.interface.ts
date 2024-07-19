@@ -7,7 +7,7 @@ interface Main {
     aqi: number;
 }
 
-interface Components {
+export interface Components {
     co: number;
     no: number;
     no2: number;
