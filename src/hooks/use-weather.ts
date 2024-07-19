@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { parseAirPolutionResponse } from "@/dtos/air-polution.dto";
 import { parsePrecipitationTemperatureResponse } from "@/dtos/precipitation-temperature.dto";
-import { ChartData } from "@/interfaces/chart.interface";
 import { AirQualityResponse } from "@/interfaces/air-polution.interface";
 import { FiveDayForecastResponse } from "@/interfaces/precipitation-temperature.interface";
 import { parseCurrentWeatherResponse } from "@/dtos/current-weather.dto";
-import { CurrentWeatherResponse, DataTable } from "@/interfaces/current-weather.interface";
+import { CurrentWeatherResponse } from "@/interfaces/current-weather.interface";
 import { useLocation } from "./use-location";
 
 const BASE_URL = `https://api.openweathermap.org/data/2.5`;
@@ -22,23 +21,24 @@ type Params = Partial<{
   endDate: string;
 }>;
 
-export const useWeather = (serviceName: WeatherService, params?: Params) => {
-  const [data, setData] = useState<ChartData[] | DataTable[]>();
+export const useWeather = <T>(serviceName: WeatherService, params?: Params) => {
+  const [data, setData] = useState<T>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { location, error: errorLocation } = useLocation();
 
   useEffect(() => {
     const getData = async () => {
-      setLoading(true);
       setError("");
       try {
+        setLoading(true);
         const endpoint = getEndpoint();
         const response = await fetch(endpoint);
         if (response.ok) {
           const weatherData = await response.json();
           const parsedData = handleWeatherServiceResponse(weatherData);
-          setData(parsedData);
+          setData(parsedData as T);
+          setLoading(false);
         }
       } catch (err) {
         setError("Error fetching the graph data");
@@ -59,7 +59,7 @@ export const useWeather = (serviceName: WeatherService, params?: Params) => {
   * This function models the data in a way that Recharts understands, 
   * or allows us to easily create a two-column table.
   * @param {AirQualityResponse | FiveDayForecastResponse | CurrentWeatherResponse} weatherData - Data provided by the "openweathermap" API.
-  * @returns {DataTable[] | ChartData[]} - Returns the data already modeled to create a chart or table, depending on the chosen service.
+  * @returns {TableInformation | ChartData[]} - Returns the data already modeled to create a chart or table, depending on the chosen service.
   */
   const handleWeatherServiceResponse = (weatherData: AirQualityResponse | FiveDayForecastResponse | CurrentWeatherResponse) => {
     switch (serviceName) {
