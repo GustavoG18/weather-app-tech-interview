@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import { parseAirPolutionResponse } from "@/dtos/air-polution.dto";
-import { parsePrecipitationTemperatureResponse } from "@/dtos/precipitation-temperature.dto";
 import { AirQualityResponse } from "@/interfaces/air-polution.interface";
 import { FiveDayForecastResponse } from "@/interfaces/precipitation-temperature.interface";
 import { parseCurrentWeatherResponse } from "@/dtos/current-weather.dto";
 import { CurrentWeatherResponse } from "@/interfaces/current-weather.interface";
 import { useLocation } from "./use-location";
+import { parseChartResponse } from "@/dtos/chart-data.dto";
 
 const BASE_URL = `https://api.openweathermap.org/data/2.5`;
 const appId = import.meta.env.VITE_WEATHER_APPID;
@@ -64,9 +63,9 @@ export const useWeather = <T>(serviceName: WeatherService, params?: Params) => {
   const handleWeatherServiceResponse = (weatherData: AirQualityResponse | FiveDayForecastResponse | CurrentWeatherResponse) => {
     switch (serviceName) {
       case WeatherService.AirPollution:
-        return parseAirPolutionResponse(weatherData as AirQualityResponse);
+        return parseChartResponse(weatherData as AirQualityResponse);
       case WeatherService.FiveDayForecast:
-        return parsePrecipitationTemperatureResponse(weatherData as FiveDayForecastResponse);
+        return parseChartResponse(weatherData as FiveDayForecastResponse);
       case WeatherService.CurrentWeather:
         return parseCurrentWeatherResponse(weatherData as CurrentWeatherResponse);
     }
