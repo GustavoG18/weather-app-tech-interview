@@ -1,30 +1,23 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# How to Run This Project
 
-Currently, two official plugins are available:
+1. **Install Dependencies:**
+   ```bash
+   npm install
+   ```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+2. **Add OpenWeather Map Key:**
+   - Add the OpenWeather Map key to the `.env` file (I've uploaded the file without the environment variable, but I'm providing my key for ease of review. This key will be deactivated in 5 business days):
+     ```plaintext
+     Key: 'c200828df66f8edb17ce6a6207dcbe12'
+     ```
 
-## Expanding the ESLint configuration
+3. **Run the Project:**
+   ```bash
+   npm run dev
+   ```
+   The project should be running on port 5173.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+In this project, I used React with TypeScript and TailwindCSS for ease of styling the components. Additionally, I used a styling library called `shadcn` for the charts, which internally uses `recharts`. This library leverages the power of `recharts` and adds some styling with TailwindCSS.
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Here is the link to the deployed project: [\[Project Link\]](https://weatherapptestinterview.netlify.app/)
